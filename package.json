@@ -1,10 +1,10 @@
 {
   "name": "caf_pubsub",
   "description": "Cloud Assistants lib for a Redis based publish/subscribe",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Antonio Lain <antlai@cafjs.com>",
   "dependencies": {
-      "caf_core" : ">= 0.0.1"
+      "caf_core" : "^0.1"
   },
   "main": "index",
     "homepage": "http://www.cafjs.com",
