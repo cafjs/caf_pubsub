@@ -1,0 +1,26 @@
+{
+    "name": "top",
+    "env" : {
+        "appPublisher" :"root",
+        "appLocalName" : "test",
+        "appSuffix" : "vcap.me"
+    },
+    "components": [
+        {
+            "name": "security",
+            "module": null
+        },
+        {
+            "name": "cp2"
+        },
+        {
+            "name": "pubsub",
+            "module": "../../index.js#plug",
+            "description": "Publish/Subscribe service.",
+            "env" : {
+                "publishService" : "cp",
+                "subscribeService" : "cp2"
+            }
+        }
+    ]
+}

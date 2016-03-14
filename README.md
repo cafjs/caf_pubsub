@@ -4,57 +4,66 @@ Co-design permanent, active, stateful, reliable cloud proxies with your web app.
 
 See http://www.cafjs.com 
 
-## CAF Extra Lib publish/subscribe
+## CAF Lib publish/subscribe
 
-This repository contains a CAF extra lib to implement a publish subscribe bus using Redis.
+[![Build Status](http://ci.cafjs.com/api/badges/cafjs/caf_pubsub/status.svg)](http://ci.cafjs.com/cafjs/caf_pubsub)
+
+This repository contains a CAF library  that implements a publish/subscribe bus with, e.g., Redis.
 
 
 ## API
 
     lib/proxy_pubsub.js
 
-See the Moody example application.
  
 ## Configuration Example
 
-### framework.json
-
-       "plugs": [
         {
-            "module": "caf_pubsub/plug",
-            "name": "pubsub_mux",
-            "description": "Shared connection to a pub/sub service \n Properties: \n",
-            "env": {
-
-            }
+            "name": "cp",
+            "module" : "caf_redis#plug",
+            "description" : "Checkpointing service",
+            ....
         },
-        ...
-                
+        {
+            "name": "cp2",
+            "module" : "caf_redis#plug",
+            "description" : "Checkpointing service",
+            ...
+        },
+        {
+            "name": "pubsub",
+            "module": "caf_pubsub#plug",
+            "description": "Publish/Subscribe service.",
+            "env" : {
+                "publishService" : "cp",
+                "subscribeService" : "cp2"
+            }
+        }
+
+        
+We need two connections to the Redis backend to support concurrent publish and subscribe operations.
+
 
 ### ca.json
 
-    "internal" : [
-         {
-            "module": "caf_pubsub/plug_ca",
-            "name": "pubsub_ca",
-            "description": "Provides a publish/subscription service for this CA",
-            "env" : {
-            
-            }
-        }, 
-        ...
-     ]
-     "proxies" : [
         {
-            "module": "caf_pubsub/proxy",
+            "module": "caf_pubsub#plug_ca",
             "name": "pubsub",
-            "description": "Access to a publish subscribe service\n Properties: \n insecureChannelPrefix: Prefix for a channel anybody can publish",
+            "description": "Manages a Pub/Sub service for a CA",
             "env" : {
-               "insecureChannelPrefix": "anybody/"
-            }
-        },
-        ...
-      ]
+                "maxRetries" : "$._.env.maxRetries",
+                "retryDelay" : "$._.env.retryDelay"
+            },
+            "components" : [
+                {
+                    "module": "caf_pubsub#proxy",
+                    "name": "proxy",
+                    "description": "Allows access to this CA Pub/Sub service",
+                    "env" : {
+                    }
+                }
+            ]
+        }
   
   
     

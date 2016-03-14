@@ -1,0 +1,9 @@
+build:
+  image: node:4.3 
+  commands:
+    - npm install
+    - npm test
+
+compose:
+  database:
+    image: redis:2.8
