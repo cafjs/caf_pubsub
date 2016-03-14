@@ -10,7 +10,6 @@ See http://www.cafjs.com
 
 This repository contains a CAF library  that implements a publish/subscribe bus with, e.g., Redis.
 
-
 ## API
 
     lib/proxy_pubsub.js
