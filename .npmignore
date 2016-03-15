@@ -1,0 +1,6 @@
+*~
+test
+.npmignore
+.git
+.gitmodules
+coverage

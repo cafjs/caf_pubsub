@@ -60,6 +60,14 @@ exports.methods = {
         this.state.h2[topic] = message;  
         cb(null);
     },
+    handlerException: function(topic,message, cb) {
+        this.state.h1[topic] = message;
+        this.state.h2[topic] = message;
+         setTimeout(function() {
+             throw new Error('Really Oops');
+             //cb(new Error('Really Oops'));
+        }, 100);
+    },
     getState: function(cb) {
         cb(null, this.state);
     }

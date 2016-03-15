@@ -30,9 +30,11 @@ var TOPIC3 = 'forum-topic3';
 
 var HANDLER1 = 'handler1';
 var HANDLER2 = 'handler2';
+var HANDLER_EXCEPTION = 'handlerException';
 
 var MSG1 = 'hello1';
 var MSG2 = 'hello2';
+var MSG3 = 'hello3';
 
 process.on('uncaughtException', function (err) {
                console.log("Uncaught Exception: " + err);
@@ -73,7 +75,7 @@ module.exports = {
         var from2 = FROM_2;
         var from3 = FROM_3;
 
-        test.expect(10);
+        test.expect(40);
         async.series(
             [
                 function(cb) {
@@ -100,6 +102,9 @@ module.exports = {
                         s3.publish(TOPIC1, MSG1 , cb);
                     };
                 },
+                
+                // 1. publish ok with different handlers 
+
                 function(cb) {
                     s1.getState(function(err, state) {
                         test.ifError(err);
@@ -116,6 +121,196 @@ module.exports = {
                         cb(null);
                     });                    
                 },
+                
+                // 2. when it fails with exception it does not publish
+
+                function(cb) {
+                    var cb1 = function(err) {
+                        test.ok(err);
+                        cb(null);
+                    };
+                    s3.publishFail(TOPIC1, MSG2 , cb1);
+                },
+                function(cb) {
+                    s1.getState(function(err, state) {
+                        test.ifError(err);
+                        test.equals(MSG1, state.h1[TOPIC1]);
+                        test.ok(!state.h2[TOPIC1]);
+                        cb(null);
+                    });                    
+                },
+                
+                // 3. unsubscribe works
+                
+                function(cb) {
+                    s1.unsubscribe(TOPIC1, cb);
+                },
+                function(cb) {
+                    s3.publish(TOPIC1, MSG2 , cb);
+                },
+                function(cb) {
+                    s1.getState(function(err, state) {
+                        test.ifError(err);
+                        test.equals(MSG1, state.h1[TOPIC1]);
+                        test.ok(!state.h2[TOPIC1]);
+                        cb(null);
+                    });                    
+                },
+                function(cb) {
+                    s2.getState(function(err, state) {
+                        test.ifError(err);
+                        test.equals(MSG2, state.h2[TOPIC1]);
+                        test.ok(!state.h1[TOPIC1]);
+                        cb(null);
+                    });                    
+                },
+                function(cb) {
+                     s2.unsubscribe(TOPIC1, cb);
+                },
+                 function(cb) {
+                    s3.publish(TOPIC2, MSG2 , cb);
+                },
+                // 4. subscribe with different topics
+                
+                function(cb) {
+                    s1.subscribe(TOPIC2, HANDLER1, cb);
+                },
+                function(cb) {
+                    s2.subscribe(TOPIC1, HANDLER2, cb);
+                },
+                function(cb) {
+                    s3.publish(TOPIC2, MSG2 , cb);
+                },
+                function(cb) {
+                    s1.getState(function(err, state) {
+                        test.ifError(err);
+                        test.equals(MSG2, state.h1[TOPIC2]);
+                        test.ok(!state.h2[TOPIC2]);
+                        cb(null);
+                    });                    
+                },
+                function(cb) {
+                    s2.getState(function(err, state) {
+                        test.ifError(err);
+                        test.ok(!state.h1[TOPIC2]);
+                        test.ok(!state.h2[TOPIC2]);
+                        cb(null);
+                    });                    
+                },
+                
+                // 5. subscribe with concurrent topics, TOPIC1+TOPIC2 in s1
+                
+                function(cb) {
+                    s1.subscribe(TOPIC1, HANDLER1, cb);
+                },                
+                function(cb) {
+                    s3.publish(TOPIC1, MSG1 , cb);
+                },
+                function(cb) {
+                    s1.getState(function(err, state) {
+                        test.ifError(err);
+                        test.equals(MSG1, state.h1[TOPIC1]);
+                        test.ok(!state.h2[TOPIC1]);
+                        cb(null);
+                    });                    
+                },
+                
+                //6. unsubscribe all
+
+                function(cb) {
+                    s1.unsubscribe(null, cb);
+                },
+                function(cb) {
+                    s3.publish(TOPIC1, MSG2 , cb);
+                },
+                function(cb) {
+                    s3.publish(TOPIC2, MSG2 , cb);
+                },
+                function(cb) {
+                    s1.getState(function(err, state) {
+                        test.ifError(err);
+                        test.equals(MSG1, state.h1[TOPIC1]);
+                        test.ok(!state.h2[TOPIC1]);
+                        cb(null);
+                    });                    
+                },
+                
+                //7. cannot publish to private channels
+
+                function(cb) {
+                    var cb1 = function(err) {
+                        test.ok(false);
+                        cb(null);
+                    };
+                    s3.onclose = function(err) {
+                        test.ok(err);
+                        cb(null);
+                    };
+                    s3.publish(FROM_2+'-topic', MSG2 , cb1);
+                },
+                function(cb) {
+                    s3 = new cli.Session('ws://foo-xx.vcap.me:3000', from3, {
+                        from : from3
+                    });
+                    s3.onopen = function() {
+                        cb(null);
+                    };
+                },
+                function(cb) {
+                    var cb1 = function(err) {
+                        test.ok(false);
+                        cb(null);
+                    };
+                    s3.onclose = function(err) {
+                        test.ok(err);
+                        cb(null);
+                    };
+                    // unqualified topic fails
+                    s3.publish('topic', MSG2 , cb1);
+                },
+                function(cb) {
+                    s3 = new cli.Session('ws://foo-xx.vcap.me:3000', from3, {
+                        from : from3
+                    });
+                    s3.onopen = function() {
+                        cb(null);
+                    };
+                },                
+                function(cb) {
+                    //ok to owned ones
+                    s3.publish(FROM_3+'-topic', MSG2 , cb);
+                },                
+                
+                //8. Exception in handler unsubscribes
+                function(cb) {
+                    s2.subscribe(TOPIC3, HANDLER_EXCEPTION, cb);
+                },
+                function(cb) {
+                    s1.subscribe(TOPIC3, HANDLER_EXCEPTION, cb);
+                },
+                function(cb) {
+                    //ok to owned ones
+                    s3.publish(TOPIC3, MSG3 , cb);
+                },                
+                function(cb) {
+                    s1.getState(function(err, state) {
+                        test.ifError(err);
+                        test.ok(!state.h1[TOPIC3]);
+                        test.ok(!state.h2[TOPIC3]);
+                        cb(null);
+                    });                    
+                },
+                function(cb) {
+                    s2.getState(function(err, state) {
+                        test.ifError(err);
+                        test.ok(!state.h1[TOPIC3]);
+                        test.ok(!state.h2[TOPIC3]);
+                        cb(null);
+                    });                    
+                },
+                
+                // cleanup
+                
                 function(cb) {
                     s1.onclose = function(err) {
                         test.ifError(err);
