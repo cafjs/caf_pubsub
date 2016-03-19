@@ -70,5 +70,13 @@ exports.methods = {
     },
     getState: function(cb) {
         cb(null, this.state);
+    },
+    die: function(cb) {
+        var self = this;
+//        this.__ca_shutdown__(null,cb);
+        setTimeout(function() { self.__ca_shutdown__(null, function() {});},
+                   100);
+        cb(null);
+        
     }
 };

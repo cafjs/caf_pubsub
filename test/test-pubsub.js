@@ -75,7 +75,7 @@ module.exports = {
         var from2 = FROM_2;
         var from3 = FROM_3;
 
-        test.expect(40);
+        test.expect(43);
         async.series(
             [
                 function(cb) {
@@ -307,6 +307,34 @@ module.exports = {
                         test.ok(!state.h2[TOPIC3]);
                         cb(null);
                     });                    
+                },
+
+                //9. Shutdown/resume
+
+                function(cb) {
+                    s2.onclose = function(err) {
+                        test.ifError(err);
+                        setTimeout(function() {cb(null);}, 100);
+                    };
+
+                    s2.die(function(err) {
+                        test.ifError(err);
+                        s2.close();
+
+                    });                    
+                },
+                function(cb) {
+                    s2 = new cli.Session('ws://foo-xx.vcap.me:3000', from2, {
+                        from : from2
+                    });
+                    s2.onopen = function() {
+                        s2.getState(function(err, state) {
+                            test.ifError(err);
+//                            test.ok(!state.h1[TOPIC3]);
+//                            test.ok(!state.h2[TOPIC3]);
+                            cb(null);
+                        });  
+                    };
                 },
                 
                 // cleanup

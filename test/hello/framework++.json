@@ -7,6 +7,14 @@
     },
     "components": [
         {
+            "name": "log",
+            "env" : {
+                  "logLevel" : "DEBUG"
+
+            }
+
+        },
+        {
             "name": "security",
             "module": null
         },
