@@ -1,0 +1,14 @@
+{
+    "name": "top",
+    "env" : {
+        "appPublisher" :"root",
+        "appLocalName" : "hellopubsub",
+        "appSuffix" : "vcap.me"
+    },
+    "components": [
+        {
+            "name": "security",
+            "module" : null
+        }
+    ]
+}

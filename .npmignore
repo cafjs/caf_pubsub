@@ -4,3 +4,4 @@ test
 .git
 .gitmodules
 coverage
+docs
