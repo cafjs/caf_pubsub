@@ -1,20 +1,18 @@
 'use strict';
 
 var caf = require('caf_core');
-var json_rpc = caf.caf_transport.json_rpc;
 
 var ADMIN_CA = 'admin';
 var ADMIN_CHANNEL = 'myNews';
 
 var isAdmin = function(self) {
     var name = self.__ca_getName__();
-    return (json_rpc.splitName(name)[1] === ADMIN_CA);
+    return (caf.splitName(name)[1] === ADMIN_CA);
 };
 
 var masterChannel = function(self) {
     var name = self.__ca_getName__();
-    return json_rpc.joinName(json_rpc.splitName(name)[0], ADMIN_CA,
-                             ADMIN_CHANNEL);
+    return caf.joinName(caf.splitName(name)[0], ADMIN_CA, ADMIN_CHANNEL);
 };
 
 exports.methods = {
