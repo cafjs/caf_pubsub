@@ -1,16 +1,16 @@
 {
   "name": "caf_pubsub",
   "description": "Cloud Assistants lib for a publish/subscribe bus",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "author": "Antonio Lain <antlai@cafjs.com>",
   "dependencies": {
-        "caf_components" : "^0.2.0",
-        "caf_transport" : "^0.2.0"
+        "caf_components" : "^0.3.0",
+        "caf_transport" : "^0.3.0"
   },
   "devDependencies": {
         "eslint": "^3.1.1",
         "nodeunit" : ">=0.9",
-        "caf_core" : "^0.2.0",
+        "caf_core" : "^0.3.0",
         "jsdoc": "^3.4.2"
   },
   "main": "index",
