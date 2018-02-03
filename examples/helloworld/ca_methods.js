@@ -16,23 +16,23 @@ var masterChannel = function(self) {
 };
 
 exports.methods = {
-    __ca_init__: function(cb) {
+    async __ca_init__() {
         this.state.counter = 0;
         this.$.pubsub.subscribe(masterChannel(this), 'handleMessage');
-        cb(null);
+        return [];
     },
-    __ca_pulse__: function(cb) {
+    async __ca_pulse__() {
         if (isAdmin(this)) {
             this.state.counter = this.state.counter + 1;
             this.$.pubsub.publish(masterChannel(this),
                                   'Counter: ' + this.state.counter);
         }
-        cb(null);
+        return [];
     },
-    handleMessage: function(topic, msg, cb) {
+    async handleMessage(topic, msg) {
         this.$.log && this.$.log.debug('Got ' + msg);
         this.$.session.notify([msg]);
-        cb(null);
+        return [];
     }
 };
 
