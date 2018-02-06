@@ -1,7 +1,5 @@
-*~
 test
 .npmignore
-.git
 .gitmodules
-coverage
 docs
+typescript
