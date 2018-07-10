@@ -5,8 +5,8 @@ Co-design permanent, active, stateful, reliable cloud proxies with your web app 
 See http://www.cafjs.com
 
 ## CAF Lib publish/subscribe
+[![Build Status](https://travis-ci.org/cafjs/caf_pubsub.svg?branch=master)](https://travis-ci.org/cafjs/caf_pubsub)
 
-[![Build Status](http://ci.cafjs.com/api/badges/cafjs/caf_pubsub/status.svg)](http://ci.cafjs.com/cafjs/caf_pubsub)
 
 This repository contains a CAF library that implements a publish/subscribe bus using, for example, a `Redis` backend.
 
