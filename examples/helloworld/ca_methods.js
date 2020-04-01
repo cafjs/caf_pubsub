@@ -1,17 +1,17 @@
 'use strict';
 
-var caf = require('caf_core');
+const caf = require('caf_core');
 
-var ADMIN_CA = 'admin';
-var ADMIN_CHANNEL = 'myNews';
+const ADMIN_CA = 'admin';
+const ADMIN_CHANNEL = 'myNews';
 
-var isAdmin = function(self) {
-    var name = self.__ca_getName__();
+const isAdmin = function(self) {
+    const name = self.__ca_getName__();
     return (caf.splitName(name)[1] === ADMIN_CA);
 };
 
-var masterChannel = function(self) {
-    var name = self.__ca_getName__();
+const masterChannel = function(self) {
+    const name = self.__ca_getName__();
     return caf.joinName(caf.splitName(name)[0], ADMIN_CA, ADMIN_CHANNEL);
 };
 
