@@ -1,7 +1,7 @@
 {
   "name": "caf_pubsub",
   "description": "Cloud Assistants lib for a publish/subscribe bus",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Antonio Lain <antlai@cafjs.com>",
     "license": "Apache-2.0",
   "dependencies": {
