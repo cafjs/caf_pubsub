@@ -53,15 +53,15 @@ exports.methods = {
             cb(new Error('Oops'));
         }, 100);
     },
-    handler1 : function(topic, message, cb) {
-        this.state.h1[topic] = message;  
+    handler1 : function(topic, message, from, cb) {
+        this.state.h1[topic] = message;
         cb(null);
     },
-    handler2 : function(topic, message, cb) {
-        this.state.h2[topic] = message;  
+    handler2 : function(topic, message, from, cb) {
+        this.state.h2[topic] = message;
         cb(null);
     },
-    handlerException: function(topic,message, cb) {
+    handlerException: function(topic, message, from, cb) {
         this.state.h1[topic] = message;
         this.state.h2[topic] = message;
          setTimeout(function() {
@@ -78,6 +78,6 @@ exports.methods = {
         setTimeout(function() { self.__ca_shutdown__(null, function() {});},
                    100);
         cb(null);
-        
+
     }
 };

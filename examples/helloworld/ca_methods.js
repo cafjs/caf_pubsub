@@ -29,7 +29,7 @@ exports.methods = {
         }
         return [];
     },
-    async handleMessage(topic, msg) {
+    async handleMessage(topic, msg, from) {
         this.$.log && this.$.log.debug('Got ' + msg);
         this.$.session.notify([msg]);
         return [];
