@@ -30,7 +30,7 @@ exports.methods = {
         return [];
     },
     async handleMessage(topic, msg, from) {
-        this.$.log && this.$.log.debug('Got ' + msg);
+        this.$.log && this.$.log.debug('Got ' + msg + ' from ' + from);
         this.$.session.notify([msg]);
         return [];
     }
