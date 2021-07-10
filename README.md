@@ -6,7 +6,7 @@ See https://www.cafjs.com
 
 ## Library to Access a Publish/Subscribe Bus
 
-[![Build Status](https://travis-ci.org/cafjs/caf_pubsub.svg?branch=master)](https://travis-ci.org/cafjs/caf_pubsub)
+[![Build Status](https://github.com/cafjs/caf_pubsub/actions/workflows/push.yml/badge.svg)](https://github.com/cafjs/caf_pubsub/actions/workflows/push.yml)
 
 This repository contains a `Caf.js` library that implements a publish/subscribe bus using, for example, a `Redis` backend.
 
