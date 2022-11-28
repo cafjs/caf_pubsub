@@ -11,6 +11,7 @@ const caf_cli = caf_core.caf_cli;
  *
  *  With security on, we would need a token to authenticate `from`.
  */
+/* eslint-disable max-len */
 const URL = 'http://root-hellopubsub.localtest.me:3000/#from=foo-ca1&ca=foo-ca1';
 
 const s = new caf_cli.Session(URL);
